@@ -1,3 +1,12 @@
+create DATABASE [testDB];
+GO
+
+USE [testDB];
+GO
+
+
+
+
 create table movieApp_movie
 (
     id       int identity
@@ -14,7 +23,7 @@ create table movieApp_movie
     rating   float          not null
 )
 go
-
+set identity_insert movieApp_movie ON
 INSERT INTO testDB.dbo.movieApp_movie (id, mid, title, types, years, country, actor, director, m_intro, poster, rating) VALUES (1, 1, N'功夫瑜伽', N'動作片', N'2017', N'大陸', N' 成龍 李治廷 張藝興 索努·蘇德', N'唐季禮', N'考古學教授Jack（成龍 飾）多年沒有踏出學校，校長和學生都對他添油加醋的曆史半信半疑。一次授課後，一個印度女孩找到Jack，用一張千年地圖吸引了Jack的目光。於是Jack和摯友的兒子李瓊斯（李治廷 飾）、助教小光（張藝興 飾）組成「尋寶小分隊」，為「神秘寶石」展開冒險，在迪拜和土豪飆車，在冰島潛入神秘冰穴，在印度大戰土狼，和印度貴族鬥舞，動作喜劇再升級，打笑全世界。', N'https://cdn.99itv.net/upload/vod/20200510-1/ee58e0f6cb796d895c55b40a00a6bfaa.jpg', 4);
 INSERT INTO testDB.dbo.movieApp_movie (id, mid, title, types, years, country, actor, director, m_intro, poster, rating) VALUES (2, 2, N'戰狼2', N'動作片', N'2017', N'大陸', N' 吳京 弗蘭克·格裡羅', N'吳京', N'冷鋒突然被捲入了一場非洲國家叛亂，本可以安全撤離，卻因無法忘記曾經為軍人的使命，孤身犯險衝回淪陷區，帶領身陷屠殺中的同胞和難民，展開生死逃亡。', N'https://cdn.99itv.net/upload/vod/20200510-1/6a6f2de1cab89ab8c5757a485409fa04.jpg', 4.5);
 INSERT INTO testDB.dbo.movieApp_movie (id, mid, title, types, years, country, actor, director, m_intro, poster, rating) VALUES (3, 3, N'波爾達克第二季', N'歐美劇', N'2016', N'美國', N' 艾丹·特納 埃莉諾·湯姆林森 約翰·奈特斯 菲爾', N'查理·帕爾默', N' 　《波爾達克》第二季於2015年9月在英國康沃爾郡開機，新季共10集，預計拍攝週期在七個半月左右，有望於2016年下半年回歸。', N'https://cdn.99itv.net/upload/vod/20200510-1/188fbd376088e0be17958f394282436b.jpg', 0);
