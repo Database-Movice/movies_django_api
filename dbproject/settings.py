@@ -32,7 +32,7 @@ SECRET_KEY = '^v)%)67i+(+0&*ntzzpjgm9idj04h7jkco2n@94xzm6k2m+5t+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0']
 
 
 # Application definition
@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rating.apps.RatingConfig',
     'search.apps.SearchConfig',
     'user.apps.UserConfig',
-    'type.apps.TypeConfig'
+    'type.apps.TypeConfig',
+    'movieApp.apps.MovieConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -66,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'dbproject.urls'
 
 TEMPLATES = [
     {
@@ -90,19 +91,36 @@ WSGI_APPLICATION = 'dbproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         "ENGINE": "mssql",
+#         "NAME": "testDB",
+#         "USER": "SA",
+#         "PASSWORD": "Andy0702",
+#         "HOST": "0.0.0.0",
+#         "PORT": "1433",
+#         "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
+#                     },
+#     }
+# }
+
 DATABASES = {
     'default': {
-        "ENGINE": "mssql",
-        "NAME": "testDB",
-        "USER": "SA",
-        "PASSWORD": "Andy0702",
-        "HOST": "172.20.10.2",
-        "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server",
-                    },
-    }
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'testDB',
+        'USER': 'SA',
+        'PASSWORD': 'Andy0702',
+        'HOST': '0.0.0.0',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+        },
+    },
 }
 
+# set this to False if you want to turn off pyodbc's connection pooling
+DATABASE_CONNECTION_POOLING = False
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
