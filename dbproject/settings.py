@@ -15,9 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import corsheaders.middleware
 
-import rating.apps
-import search.apps
-import type.apps
+
 import user.apps
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,11 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'years.apps.YearsConfig',
-    'rating.apps.RatingConfig',
-    'search.apps.SearchConfig',
+
     'user.apps.UserConfig',
-    'type.apps.TypeConfig',
     'movieApp.apps.MovieConfig'
 ]
 
@@ -108,9 +103,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
         'NAME': 'testDB',
-        'USER': 'SA',
-        'PASSWORD': 'Andy0702',
-        'HOST': '0.0.0.0',
+        'USER': 'sa',
+        'PASSWORD': 'Team23',
+        'HOST': '140.136.151.91',
         'PORT': '1433',
 
         'OPTIONS': {
