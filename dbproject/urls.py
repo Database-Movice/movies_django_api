@@ -18,11 +18,14 @@ from django.urls import path
 from movieApp.views import getAll,getAllYear
 from actorApp.views import getAllActor
 from directorApp.views import getAllDirector
+from countryApp.views import getAllCountry
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('getallmovie/', getAll),
 path('getallYear/', getAllYear),
     path('getallActor/',getAllActor),
-    path('getallDirector/',getAllDirector)
+    path('getallDirector/',getAllDirector),
+    path('getallCountry/',getAllCountry)
+
 
 ]

@@ -16,6 +16,7 @@ import os
 import corsheaders.middleware
 
 import actorApp.apps
+import countryApp.apps
 import directorApp.apps
 import user.apps
 
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'movieApp.apps.MovieappConfig',
     'actorApp.apps.ActorappConfig',
-    'directorApp.apps.DirectorappConfig'
+    'directorApp.apps.DirectorappConfig',
+    'countryApp.apps.CountryappConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
