@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from movieApp.views import getAll,getAllYear
 from actorApp.views import getAllActor
+from directorApp.views import getAllDirector
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('getallmovie/', getAll),
 path('getallYear/', getAllYear),
-    path('getallActor/',getAllActor)
+    path('getallActor/',getAllActor),
+    path('getallDirector/',getAllDirector)
+
 ]
