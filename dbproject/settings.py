@@ -15,7 +15,7 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import corsheaders.middleware
 
-
+import actorApp.apps
 import user.apps
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'user.apps.UserConfig',
-    'movieApp.apps.MovieConfig'
+    'movieApp.apps.MovieappConfig',
+    'actorApp.apps.ActorappConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
