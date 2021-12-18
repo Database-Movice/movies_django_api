@@ -7,7 +7,7 @@ class movie(models.Model):
     mid = models.IntegerField()
     title = models.CharField(max_length=4000)
     types = models.CharField(max_length=4000)
-    years = models.CharField(max_length=4000)
+    year = models.CharField(max_length=4000)
     country = models.CharField(max_length=4000)
     actor = models.CharField(max_length=4000)
     director = models.CharField(max_length=4000)

@@ -8,7 +8,9 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 @api_view(['GET'])
 def getAll(self):
     try:
-        queryset = movie.objects.all()
+        firstIndex =0
+        limitIndex = 100
+        queryset = movie.objects.all()[firstIndex:limitIndex]
         result = MovieSerializer(queryset, many=True)
         response = JsonResponse(result.data, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
