@@ -9,4 +9,3 @@ python-dotenv==0.19.2
 django-cors-headers==3.4.0
 mssql-django==1.0
 django-mssql-backend==2.8.1
-django-pyodbc-azure==2.1.0.0
