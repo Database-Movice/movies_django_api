@@ -18,6 +18,7 @@ import corsheaders.middleware
 import actorApp.apps
 import countryApp.apps
 import directorApp.apps
+import ratingApp.apps
 import typeApp.apps
 import user.apps
 import yearApp.apps
@@ -36,7 +37,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0']
 
-
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
@@ -48,13 +49,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django.contrib.sites',
     'user.apps.UserConfig',
     'movieApp.apps.MovieappConfig',
     'actorApp.apps.ActorappConfig',
     'directorApp.apps.DirectorappConfig',
     'countryApp.apps.CountryappConfig',
     'typeApp.apps.TypeappConfig',
-    'yearApp.apps.YearappConfig'
+    'yearApp.apps.YearappConfig',
+    'ratingApp.apps.RatingappConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

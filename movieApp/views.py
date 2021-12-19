@@ -1,8 +1,9 @@
 # -*- coding:utf-8 -*-
 from rest_framework import generics
-from movieApp.models import movie
+from movieApp.models import movie#, movieAllInfo
 from countryApp.models import country
-from movieApp.serializers import MovieSerializer
+from ratingApp.models import rating
+from movieApp.serializers import MovieSerializer#, allMovieSerializer
 from rest_framework.decorators import api_view
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
@@ -10,10 +11,10 @@ from string import Template
 
 
 def template(input: str):
-    countryname='test'
-    t = Template("select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  join countryApp_country on movieApp_movie.mid  = countryApp_country.mid where countryApp_country.c_name = $countryname")
-    return t.substitute(countryname='"'+input+'"')
-
+    countryname = 'test'
+    t = Template(
+        "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  join countryApp_country on movieApp_movie.mid  = countryApp_country.mid where countryApp_country.c_name = $countryname")
+    return t.substitute(countryname='"' + input + '"')
 
 
 @api_view(['GET'])
@@ -30,11 +31,22 @@ def getAll(self):
         print(e)
 
 
-def getAllYear(self):
+@api_view(['GET'])
+def getAllRating(self):
     try:
-        queryset = movie.objects.all()
-        serializer_class = MovieSerializer
+        firstIndex = 0
+        limitIndex = 100
+        query1 = list(rating.objects.values_list('mid').order_by('-r_name')[firstIndex:limitIndex])
+        query2 = list(movie.objects.filter(mid__in=query1).select_related('mid', 'title', 'm_intro','poster','r_name'))
+
+        #query2 = list(movieAllInfo.objects.order_by('r_name'))
+        #result = MovieSerializer(query2, many=True)
+
+
+        response = JsonResponse(query2, safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
         print("done")
+        return response
     except Exception as e:
         print(e)
 
@@ -49,7 +61,8 @@ def getAllMovieByCountry(request):
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         test = template(countryname)
-        a  = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join countryApp_country on movieApp_movie.mid  = countryApp_country.mid where countryApp_country.c_name like '"+countryname+"' order by movieApp_movie.mid offset "+str(offset)+" rows fetch next  "+str(items_per_page)+" rows only"
+        a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join countryApp_country on movieApp_movie.mid  = countryApp_country.mid where countryApp_country.c_name like '" + countryname + "' order by movieApp_movie.mid offset " + str(
+            offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         movieList = movie.objects.raw(a)
 
         result = MovieSerializer(movieList, many=True)
