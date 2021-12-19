@@ -21,7 +21,7 @@ def getAll(self):
     try:
         firstIndex = 0
         limitIndex = 100
-        queryset = movie.objects.all()[firstIndex:limitIndex]
+        queryset = movie.objects.all().order_by('-mid')[firstIndex:limitIndex]
         result = MovieSerializer(queryset, many=True)
         response = JsonResponse(result.data, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
