@@ -15,17 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from movieApp.views import getAll,getAllYear
+from movieApp.views import getAll, getAllYear, getAllMovieByCountry
 from actorApp.views import getAllActor
 from directorApp.views import getAllDirector
 from countryApp.views import getAllCountry
+from typeApp.views import getAllType
+from yearApp.views import getAllYear
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('getallmovie/', getAll),
-path('getallYear/', getAllYear),
-    path('getallActor/',getAllActor),
-    path('getallDirector/',getAllDirector),
-    path('getallCountry/',getAllCountry)
-
+    path('getallYear/', getAllYear),
+    path('getallActor/', getAllActor),
+    path('getallDirector/', getAllDirector),
+    path('getallCountry/', getAllCountry),
+    path('getallType/', getAllType),
+    path('getmoviebycountry/', getAllMovieByCountry),
+    path('getallYear/',getAllYear)
 
 ]
