@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
 from string import Template
-
+from django.db import connection
 
 def template(input: str):
     countryname = 'test'
@@ -34,16 +34,14 @@ def getAll(self):
 @api_view(['GET'])
 def getAllRating(self):
     try:
-        firstIndex = 0
-        limitIndex = 100
-        query1 = list(rating.objects.values_list('mid').order_by('-r_name')[firstIndex:limitIndex])
-        query2 = list(movie.objects.filter(mid__in=query1).select_related('mid', 'title', 'm_intro','poster','r_name'))
-
-        #query2 = list(movieAllInfo.objects.order_by('r_name'))
-        #result = MovieSerializer(query2, many=True)
-
-
-        response = JsonResponse(query2, safe=False)
+        cursor = connection.cursor()
+        a = '''select top 100 movieApp_movie.mid,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,ratingApp_rating.r_name from movieApp_movie join ratingApp_rating on movieApp_movie.mid = ratingApp_rating.mid order by ratingApp_rating.r_name DESC'''
+        cursor.execute(a)
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+        response = JsonResponse(result, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         print("done")
         return response
