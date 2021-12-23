@@ -76,7 +76,7 @@ def getMovieByCountry(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
-        # offset = (offset-1) * items_per_page
+        offset = (offset-1) * items_per_page
         cursor = connection.cursor()
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,countryApp_country.c_name
@@ -107,6 +107,7 @@ def getMovieByType(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         test = template(typename)
         a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join typeApp_type on movieApp_movie.mid  = typeApp_type.mid where typeApp_type.t_name like '" + typename + "' order by movieApp_movie.mid offset " + str(
@@ -132,6 +133,7 @@ def getMovieByYear(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         test = template(yearname)
         a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid where yearApp_year.y_name like '" + yearname + "' order by movieApp_movie.mid offset " + str(
@@ -188,6 +190,7 @@ def getMovieByTitle(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         # titlename = "%"+titlename+"%"
         # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
@@ -222,6 +225,7 @@ def getMovieByDirector(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         # titlename = "%"+titlename+"%"
         # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
@@ -257,6 +261,7 @@ def getMovieBySearch(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         # titlename = "%"+titlename+"%"
         # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
