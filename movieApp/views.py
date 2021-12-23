@@ -1,14 +1,15 @@
 # -*- coding:utf-8 -*-
 from rest_framework import generics
-from movieApp.models import movie#, movieAllInfo
+from movieApp.models import movie  # , movieAllInfo
 from countryApp.models import country
 from ratingApp.models import rating
-from movieApp.serializers import MovieSerializer#, allMovieSerializer
+from movieApp.serializers import MovieSerializer  # , allMovieSerializer
 from rest_framework.decorators import api_view
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
 from string import Template
 from django.db import connection
+
 
 def template(input: str):
     countryname = 'test'
@@ -27,6 +28,24 @@ def getAll(self):
         response = JsonResponse(result.data, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         return response
+    except Exception as e:
+        print(e)
+
+
+@api_view(['POST'])
+def getMovie(request):
+    try:
+        firstIndex = int(request.data.get('currentPage', 1))
+        limitIndex = int(request.data.get('pageLimit', 100))
+        queryset = movie.objects.all().order_by('-mid')[(firstIndex - 1) * limitIndex:firstIndex * limitIndex]
+        datacount = movie.objects.count()
+
+        result = MovieSerializer(queryset, many=True)
+        response = {}
+        response["Access-Control-Allow-Origin"] = "*"
+        response['data'] = result.data
+        response['total'] = datacount
+        return JsonResponse(response)
     except Exception as e:
         print(e)
 
@@ -57,10 +76,10 @@ def getMovieByCountry(request):
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
-        #offset = (offset-1) * items_per_page
+        # offset = (offset-1) * items_per_page
         cursor = connection.cursor()
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
-        a =  f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,countryApp_country.c_name
+        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,countryApp_country.c_name
         from movieApp_movie join countryApp_country on movieApp_movie.mid = countryApp_country.mid
         where countryApp_country.c_name like '%{countryname}%' 
         order by movieApp_movie.mid 
@@ -79,6 +98,7 @@ def getMovieByCountry(request):
         return response
     except Exception as e:
         print(e)
+
 
 @api_view(['POST'])
 def getMovieByType(request):
@@ -104,6 +124,7 @@ def getMovieByType(request):
     except Exception as e:
         print(e)
 
+
 @api_view(['POST'])
 def getMovieByYear(request):
     try:
@@ -113,7 +134,8 @@ def getMovieByYear(request):
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         test = template(yearname)
-        a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid where yearApp_year.y_name like '" + yearname + "' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid where yearApp_year.y_name like '" + yearname + "' order by movieApp_movie.mid offset " + str(
+            offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         movieList = movie.objects.raw(a)
 
         result = MovieSerializer(movieList, many=True)
@@ -127,23 +149,24 @@ def getMovieByYear(request):
     except Exception as e:
         print(e)
 
+
 @api_view(['POST'])
 def getMovieByMid(request):
     try:
 
         mid = int(request.data.get('mid', None))
-        #offset = int(request.data['pagenumber'])
-        #items_per_page = int(request.data.get('pagelimit', 2000))
-        #items_per_page = items_per_page if items_per_page < 2000 else 2000
+        # offset = int(request.data['pagenumber'])
+        # items_per_page = int(request.data.get('pagelimit', 2000))
+        # items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         cursor = connection.cursor()
-        a ='''select movieApp_movie.mid as id,movieApp_movie.title,typeApp_type.t_name,yearApp_year.y_name,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.m_intro,movieApp_movie.poster,ratingApp_rating.r_name
+        a = '''select movieApp_movie.mid as id,movieApp_movie.title,typeApp_type.t_name,yearApp_year.y_name,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.m_intro,movieApp_movie.poster,ratingApp_rating.r_name
 from (((movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid) join (typeApp_type join actorApp_actor
         on typeApp_type.mid = actorApp_actor.mid) on movieApp_movie.mid = typeApp_type.mid) join (directorApp_director
 join ratingApp_rating on directorApp_director.mid = ratingApp_rating.mid) on movieApp_movie.mid = directorApp_director.mid)
 join countryApp_country on movieApp_movie.mid = countryApp_country.mid
 where movieApp_movie.mid  = %s'''
-        cursor.execute(a,(mid,))
+        cursor.execute(a, (mid,))
         result = []
         columns = [column[0] for column in cursor.description]
         for row in cursor.fetchall():
@@ -155,6 +178,8 @@ where movieApp_movie.mid  = %s'''
         return response
     except Exception as e:
         print(e)
+
+
 @api_view(['POST'])
 def getMovieByTitle(request):
     try:
@@ -164,8 +189,8 @@ def getMovieByTitle(request):
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
-        #titlename = "%"+titlename+"%"
-        #a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        # titlename = "%"+titlename+"%"
+        # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         cursor = connection.cursor()
         a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster
 from movieApp_movie
@@ -198,8 +223,8 @@ def getMovieByDirector(request):
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
-        #titlename = "%"+titlename+"%"
-        #a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        # titlename = "%"+titlename+"%"
+        # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         cursor = connection.cursor()
         a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,directorApp_director.d_name
 from movieApp_movie join directorApp_director on movieApp_movie.mid = directorApp_director.mid
@@ -223,6 +248,7 @@ fetch next {items_per_page} rows only
     except Exception as e:
         print(e)
 
+
 @api_view(['POST'])
 def getMovieBySearch(request):
     try:
@@ -232,8 +258,8 @@ def getMovieBySearch(request):
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
-        #titlename = "%"+titlename+"%"
-        #a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        # titlename = "%"+titlename+"%"
+        # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         cursor = connection.cursor()
         a = f'''select movieApp_movie.mid as id,movieApp_movie.title,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.poster
 from (((movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid) join (typeApp_type join actorApp_actor
@@ -251,11 +277,10 @@ where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like
         for row in cursor.fetchall():
             result.append(dict(zip(columns, row)))
 
-        response = JsonResponse(result[offset:offset+items_per_page], safe=False)
+        response = JsonResponse(result[offset:offset + items_per_page], safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         cursor.close()
         print("done")
         return response
     except Exception as e:
         print(e)
-

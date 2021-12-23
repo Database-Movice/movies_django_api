@@ -21,6 +21,7 @@ import directorApp.apps
 import ratingApp.apps
 import typeApp.apps
 import user.apps
+import userApp.apps
 import yearApp.apps
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -57,7 +58,8 @@ INSTALLED_APPS = [
     'countryApp.apps.CountryappConfig',
     'typeApp.apps.TypeappConfig',
     'yearApp.apps.YearappConfig',
-    'ratingApp.apps.RatingappConfig'
+    'ratingApp.apps.RatingappConfig',
+    'userApp.apps.UserappConfig'
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True

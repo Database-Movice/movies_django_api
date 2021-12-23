@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from movieApp.views import getAll, getMovieByRating, getMovieByCountry,getMovieByType,getMovieByYear,getMovieByMid,getMovieByTitle,getMovieByDirector,getMovieBySearch
+from movieApp.views import getAll, getMovieByRating, getMovieByCountry, getMovieByType, getMovieByYear, getMovieByMid, \
+    getMovieByTitle, getMovieByDirector, getMovieBySearch, getMovie
 from actorApp.views import getAllActor
 from directorApp.views import getAllDirector
 from countryApp.views import getAllCountry
 from typeApp.views import getAllType
 from yearApp.views import getAllYear
+from userApp.views import createUser, userLogin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,11 +33,15 @@ urlpatterns = [
     path('getallCountry/', getAllCountry),
     path('getallType/', getAllType),
     path('getmoviebycountry/', getMovieByCountry),
-    path('getallYear/',getAllYear),
-    path('getmoviebytype/',getMovieByType),
-    path('getmoviebyyear/',getMovieByYear),
-    path('getmoviebymid/',getMovieByMid),
-    path('getmoviebytitle/',getMovieByTitle),
-    path('getmoviebydirector/',getMovieByDirector),
-    path('getmoviebysearch/',getMovieBySearch)
+    path('getallYear/', getAllYear),
+    path('getmoviebytype/', getMovieByType),
+    path('getmoviebyyear/', getMovieByYear),
+    path('getmoviebymid/', getMovieByMid),
+    path('getmoviebytitle/', getMovieByTitle),
+    path('getmoviebydirector/', getMovieByDirector),
+    path('getmoviebysearch/', getMovieBySearch),
+    path('createuser/', createUser),
+    path('userlogin/', userLogin),
+    path('getmovierange/',getMovie)
+
 ]
