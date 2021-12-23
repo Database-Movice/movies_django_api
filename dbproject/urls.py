@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from movieApp.views import getAll, getMovieByRating, getMovieByCountry,getMovieByType,getMovieByYear,getMovieByMid,getMovieByTitle,getMovieByDirector
+from movieApp.views import getAll, getMovieByRating, getMovieByCountry,getMovieByType,getMovieByYear,getMovieByMid,getMovieByTitle,getMovieByDirector,getMovieBySearch
 from actorApp.views import getAllActor
 from directorApp.views import getAllDirector
 from countryApp.views import getAllCountry
@@ -36,5 +36,6 @@ urlpatterns = [
     path('getmoviebyyear/',getMovieByYear),
     path('getmoviebymid/',getMovieByMid),
     path('getmoviebytitle/',getMovieByTitle),
-    path('getmoviebydirector/',getMovieByDirector)
+    path('getmoviebydirector/',getMovieByDirector),
+    path('getmoviebysearch/',getMovieBySearch)
 ]

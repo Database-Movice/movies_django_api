@@ -222,3 +222,40 @@ fetch next {items_per_page} rows only
         return response
     except Exception as e:
         print(e)
+
+@api_view(['POST'])
+def getMovieBySearch(request):
+    try:
+
+        search = str(request.data.get('search', None))
+        offset = int(request.data['pagenumber'])
+        items_per_page = int(request.data.get('pagelimit', 2000))
+        items_per_page = items_per_page if items_per_page < 2000 else 2000
+        # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
+        #titlename = "%"+titlename+"%"
+        #a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        cursor = connection.cursor()
+        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.poster
+from (((movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid) join (typeApp_type join actorApp_actor
+        on typeApp_type.mid = actorApp_actor.mid) on movieApp_movie.mid = typeApp_type.mid) join (directorApp_director
+join ratingApp_rating on directorApp_director.mid = ratingApp_rating.mid) on movieApp_movie.mid = directorApp_director.mid)
+join countryApp_country on movieApp_movie.mid = countryApp_country.mid
+where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like  '%{search}%' or actorApp_actor.a_name like '%{search}%' 
+
+
+'''
+
+        cursor.execute(a)
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+
+        response = JsonResponse(result[offset:offset+items_per_page], safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        cursor.close()
+        print("done")
+        return response
+    except Exception as e:
+        print(e)
+
