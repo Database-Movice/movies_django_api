@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.db.models import Q
 from string import Template
 from django.db import connection
-
+import random
 
 def template(input: str):
     countryname = 'test'
@@ -283,6 +283,33 @@ where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like
             result.append(dict(zip(columns, row)))
 
         response = JsonResponse(result[offset:offset + items_per_page], safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        cursor.close()
+        print("done")
+        return response
+    except Exception as e:
+        print(e)
+
+@api_view(['GET'])
+def getRandomMovie(request):
+    try:
+        randomList = []
+        for i in range(0,20):
+            addMid = random.randint(1,79349)
+            randomList.append(addMid)
+        randomList = tuple(randomList)
+        cursor = connection.cursor()
+        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster
+            from movieApp_movie 
+            where movieApp_movie.mid in {randomList}
+'''
+
+        cursor.execute(a)
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+        response = JsonResponse(result, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         cursor.close()
         print("done")
