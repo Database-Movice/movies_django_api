@@ -65,7 +65,7 @@ def getMovie(request):
         output = {
             'data': result[firstIndex:firstIndex + limitIndex],
             'Access-Control-Allow-Origin': "*",
-            'total': len(result)
+            'total': int(len(result)/limitIndex)+1
         }
         return JsonResponse(output)
     except Exception as e:
@@ -312,7 +312,7 @@ where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like
         output = {
             'data': result[offset:offset + items_per_page],
             'Access-Control-Allow-Origin': "*",
-            'total': len(result)
+            'total': int(len(result)/items_per_page)+1
         }
         return JsonResponse(output)
         print("done")
