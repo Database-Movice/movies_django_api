@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from movieApp.views import getAll, getMovieByRating, getMovieByCountry, getMovieByType, getMovieByYear, getMovieByMid, \
-    getMovieByTitle, getMovieByDirector, getMovieBySearch, getMovie,getRandomMovie
+    getMovieByTitle, getMovieByDirector, getMovieBySearch, getMovie,getRandomMovie,getMovieByActor
 from actorApp.views import getAllActor
 from directorApp.views import getAllDirector
 from countryApp.views import getAllCountry
@@ -44,5 +44,7 @@ urlpatterns = [
     path('createuser/', createUser),
     path('userlogin/', userLogin),
     path('getmovierange/',getMovie),
-    path('getRandomMovie/',getRandomMovie)
+    path('getRandomMovie/',getRandomMovie),
+    path('getmoviebyactor/',getMovieByActor)
+
 ]

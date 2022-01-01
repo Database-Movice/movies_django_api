@@ -256,27 +256,72 @@ def getMovieByDirector(request):
         # titlename = "%"+titlename+"%"
         # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         cursor = connection.cursor()
-        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,directorApp_director.d_name
+        query = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,directorApp_director.d_name
 from movieApp_movie join directorApp_director on movieApp_movie.mid = directorApp_director.mid
 where directorApp_director.d_name like '%{directorname}%' 
 order by movieApp_movie.mid 
-offset {offset} rows 
-fetch next {items_per_page} rows only
+
 
 '''
 
-        cursor.execute(a)
+        cursor.execute(query)
+
         result = []
         columns = [column[0] for column in cursor.description]
         for row in cursor.fetchall():
             result.append(dict(zip(columns, row)))
-        response = JsonResponse(result, safe=False)
-        response["Access-Control-Allow-Origin"] = "*"
+
+        # result = map(lambda row: dict(zip(columns, row)), cursor.fetchall())
         cursor.close()
+        output = {
+            'data': result[offset:offset + items_per_page],
+            'Access-Control-Allow-Origin': "*",
+            'total': int(len(result) / items_per_page) + 1
+        }
+        return JsonResponse(output)
         print("done")
-        return response
     except Exception as e:
         print(e)
+@api_view(['POST'])
+def getMovieByActor(request):
+    try:
+        print(request.data)
+        actorname = str(request.data['params'].get('a_name', None))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
+        items_per_page = items_per_page if items_per_page < 2000 else 2000
+        offset = (offset - 1) * items_per_page
+        # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
+        # titlename = "%"+titlename+"%"
+        # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
+        cursor = connection.cursor()
+        query = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,actorApp_actor.a_name
+from movieApp_movie join actorApp_actor on movieApp_movie.mid = actorApp_actor.mid
+where actorApp_actor.a_name like '%{actorname}%' 
+order by movieApp_movie.mid 
+'''
+
+        cursor.execute(query)
+
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+
+        # result = map(lambda row: dict(zip(columns, row)), cursor.fetchall())
+        cursor.close()
+        output = {
+            'data': result[offset:offset + items_per_page],
+            'Access-Control-Allow-Origin': "*",
+            'total': int(len(result) / items_per_page) + 1
+        }
+        return JsonResponse(output)
+        print("done")
+    except Exception as e:
+        print(e)
+
+
+
 
 
 @api_view(['POST'])
