@@ -156,7 +156,7 @@ def getMovieByYear(request):
 def getMovieByMid(request):
     try:
         print(request.data)
-        mid = int(request.data.get('mid', None))
+        mid = int(request.data['params'].get('mid', None))
         # offset = int(request.data['pagenumber'])
         # items_per_page = int(request.data.get('pagelimit', 2000))
         # items_per_page = items_per_page if items_per_page < 2000 else 2000
