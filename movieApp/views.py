@@ -11,6 +11,7 @@ from string import Template
 from django.db import connection
 import random
 
+
 def template(input: str):
     countryname = 'test'
     t = Template(
@@ -78,7 +79,7 @@ def getMovieByCountry(request):
         offset = int(request.data['params'].get('pagenumber'))
         items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
-        offset = (offset-1) * items_per_page
+        offset = (offset - 1) * items_per_page
         cursor = connection.cursor()
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
         a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster,countryApp_country.c_name
@@ -271,7 +272,7 @@ def getMovieBySearch(request):
         # titlename = "%"+titlename+"%"
         # a = "select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster from movieApp_movie  where movieApp_movie.title like '"+"%" + titlename +"%" +"' order by movieApp_movie.mid offset " + str(offset) + " rows fetch next  " + str(items_per_page) + " rows only"
         cursor = connection.cursor()
-        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.poster
+        query = f'''select movieApp_movie.mid as id,movieApp_movie.title,countryApp_country.c_name,actorApp_actor.a_name,directorApp_director.d_name,movieApp_movie.poster
 from (((movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.mid) join (typeApp_type join actorApp_actor
         on typeApp_type.mid = actorApp_actor.mid) on movieApp_movie.mid = typeApp_type.mid) join (directorApp_director
 join ratingApp_rating on directorApp_director.mid = ratingApp_rating.mid) on movieApp_movie.mid = directorApp_director.mid)
@@ -279,26 +280,32 @@ join countryApp_country on movieApp_movie.mid = countryApp_country.mid
 where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like  '%{search}%' or actorApp_actor.a_name like '%{search}%' 
 '''
 
-        cursor.execute(a)
+        cursor.execute(query)
+
         result = []
         columns = [column[0] for column in cursor.description]
         for row in cursor.fetchall():
             result.append(dict(zip(columns, row)))
 
-        response = JsonResponse(result[offset:offset + items_per_page], safe=False)
-        response["Access-Control-Allow-Origin"] = "*"
+        # result = map(lambda row: dict(zip(columns, row)), cursor.fetchall())
         cursor.close()
+        output = {
+            'data': result[offset:offset + items_per_page],
+            'Access-Control-Allow-Origin': "*",
+            'total': len(result)
+        }
+        return JsonResponse(output)
         print("done")
-        return response
     except Exception as e:
         print(e)
+
 
 @api_view(['GET'])
 def getRandomMovie(request):
     try:
         randomList = []
-        for i in range(0,20):
-            addMid = random.randint(1,79349)
+        for i in range(0, 20):
+            addMid = random.randint(1, 79349)
             randomList.append(addMid)
         randomList = tuple(randomList)
         cursor = connection.cursor()
@@ -318,4 +325,3 @@ def getRandomMovie(request):
         return response
     except Exception as e:
         print(e)
-
