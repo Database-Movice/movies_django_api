@@ -72,7 +72,7 @@ def getMovieByRating(self):
 @api_view(['POST'])
 def getMovieByCountry(request):
     try:
-        countryname = str(request.data.get('c_name', None))
+        countryname = str(request.data['params'].get('c_name', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
@@ -103,7 +103,7 @@ def getMovieByCountry(request):
 @api_view(['POST'])
 def getMovieByType(request):
     try:
-        typename = str(request.data.get('t_name', None))
+        typename = str(request.data['params'].get('t_name', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
@@ -129,7 +129,7 @@ def getMovieByType(request):
 @api_view(['POST'])
 def getMovieByYear(request):
     try:
-        yearname = str(request.data.get('y_name', None))
+        yearname = str(request.data['params'].get('y_name', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
@@ -186,7 +186,7 @@ where movieApp_movie.mid  = %s'''
 def getMovieByTitle(request):
     try:
 
-        titlename = str(request.data.get('title', None))
+        titlename = str(request.data['params'].get('title', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
@@ -221,7 +221,7 @@ fetch next {items_per_page} rows only
 @api_view(['POST'])
 def getMovieByDirector(request):
     try:
-        directorname = str(request.data.get('d_name', None))
+        directorname = str(request.data['params'].get('d_name', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
@@ -257,7 +257,7 @@ fetch next {items_per_page} rows only
 def getMovieBySearch(request):
     try:
 
-        search = str(request.data.get('search', None))
+        search = str(request.data['params'].get('search', None))
         offset = int(request.data['pagenumber'])
         items_per_page = int(request.data.get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
