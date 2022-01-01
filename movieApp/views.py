@@ -47,23 +47,27 @@ def getMovie(request):
         firstIndex = (firstIndex - 1) * limitIndex
         cursor = connection.cursor()
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
-        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster
+        query = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster
                from (movieApp_movie join typeApp_type on (movieApp_movie.mid = typeApp_type.mid)) join yearApp_year on (movieApp_movie.mid = yearApp_year.mid)
                where typeApp_type.t_name in {typeList} and yearApp_year.y_name = '{year}' 
                order by movieApp_movie.mid 
-               offset {firstIndex} rows 
-               fetch next {limitIndex} rows only'''
+               '''
 
-        cursor.execute(a)
+        cursor.execute(query)
+
         result = []
         columns = [column[0] for column in cursor.description]
         for row in cursor.fetchall():
             result.append(dict(zip(columns, row)))
-        response = JsonResponse(result, safe=False)
-        response["Access-Control-Allow-Origin"] = "*"
+
+        # result = map(lambda row: dict(zip(columns, row)), cursor.fetchall())
         cursor.close()
-        print("done")
-        return response
+        output = {
+            'data': result[firstIndex:firstIndex + limitIndex],
+            'Access-Control-Allow-Origin': "*",
+            'total': len(result)
+        }
+        return JsonResponse(output)
     except Exception as e:
         print(e)
 
