@@ -35,8 +35,9 @@ def getAll(self):
 @api_view(['POST'])
 def getMovie(request):
     try:
-        firstIndex = int(request.data.get('currentPage', 1))
-        limitIndex = int(request.data.get('pageLimit', 100))
+        print(request.data)
+        firstIndex = int(request.data['params'].get('currentPage', 1))
+        limitIndex = int(request.data['params'].get('pageLimit', 100))
         queryset = movie.objects.all().order_by('-mid')[(firstIndex - 1) * limitIndex:firstIndex * limitIndex]
         datacount = movie.objects.count()
 
@@ -72,9 +73,10 @@ def getMovieByRating(self):
 @api_view(['POST'])
 def getMovieByCountry(request):
     try:
+        print(request.data)
         countryname = str(request.data['params'].get('c_name', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset-1) * items_per_page
         cursor = connection.cursor()
@@ -103,9 +105,10 @@ def getMovieByCountry(request):
 @api_view(['POST'])
 def getMovieByType(request):
     try:
+        print(request.data)
         typename = str(request.data['params'].get('t_name', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
@@ -129,9 +132,10 @@ def getMovieByType(request):
 @api_view(['POST'])
 def getMovieByYear(request):
     try:
+        print(request.data)
         yearname = str(request.data['params'].get('y_name', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
@@ -185,10 +189,10 @@ where movieApp_movie.mid  = %s'''
 @api_view(['POST'])
 def getMovieByTitle(request):
     try:
-
+        print(request.data)
         titlename = str(request.data['params'].get('title', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
@@ -221,9 +225,10 @@ fetch next {items_per_page} rows only
 @api_view(['POST'])
 def getMovieByDirector(request):
     try:
+        print(request.data)
         directorname = str(request.data['params'].get('d_name', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
@@ -256,10 +261,10 @@ fetch next {items_per_page} rows only
 @api_view(['POST'])
 def getMovieBySearch(request):
     try:
-
+        print(request.data)
         search = str(request.data['params'].get('search', None))
-        offset = int(request.data['pagenumber'])
-        items_per_page = int(request.data.get('pagelimit', 2000))
+        offset = int(request.data['params'].get('pagenumber'))
+        items_per_page = int(request.data['params'].get('pagelimit', 2000))
         items_per_page = items_per_page if items_per_page < 2000 else 2000
         offset = (offset - 1) * items_per_page
         # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
