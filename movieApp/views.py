@@ -38,16 +38,32 @@ def getMovie(request):
     try:
         print(request.data)
         firstIndex = int(request.data['params'].get('currentPage', 1))
-        limitIndex = int(request.data['params'].get('pageLimit', 100))
-        queryset = movie.objects.all().order_by('-mid')[(firstIndex - 1) * limitIndex:firstIndex * limitIndex]
-        datacount = movie.objects.count()
+        limitIndex = int(request.data['params'].get('pageLimit', 2000))
+        typeList = tuple(request.data['params'].get('typeList'))
+        year = str(request.data['params'].get('currentYear',2021))
 
-        result = MovieSerializer(queryset, many=True)
-        response = {}
+
+        limitIndex = limitIndex if limitIndex < 2000 else 2000
+        firstIndex = (firstIndex - 1) * limitIndex
+        cursor = connection.cursor()
+        # movieIDList = list(country.objects.filter(c_name=countryname).values_list('mid', flat=True))
+        a = f'''select movieApp_movie.mid as id,movieApp_movie.title,movieApp_movie.m_intro,movieApp_movie.poster
+               from (movieApp_movie join typeApp_type on (movieApp_movie.mid = typeApp_type.mid)) join yearApp_year on (movieApp_movie.mid = yearApp_year.mid)
+               where typeApp_type.t_name in {typeList} and yearApp_year.y_name = '{year}' 
+               order by movieApp_movie.mid 
+               offset {firstIndex} rows 
+               fetch next {limitIndex} rows only'''
+
+        cursor.execute(a)
+        result = []
+        columns = [column[0] for column in cursor.description]
+        for row in cursor.fetchall():
+            result.append(dict(zip(columns, row)))
+        response = JsonResponse(result, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
-        response['data'] = result.data
-        response['total'] = datacount
-        return JsonResponse(response)
+        cursor.close()
+        print("done")
+        return response
     except Exception as e:
         print(e)
 
