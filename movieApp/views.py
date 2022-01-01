@@ -155,7 +155,7 @@ def getMovieByYear(request):
 @api_view(['POST'])
 def getMovieByMid(request):
     try:
-
+        print(request.data)
         mid = int(request.data.get('mid', None))
         # offset = int(request.data['pagenumber'])
         # items_per_page = int(request.data.get('pagelimit', 2000))
@@ -272,8 +272,6 @@ from (((movieApp_movie join yearApp_year on movieApp_movie.mid  = yearApp_year.m
 join ratingApp_rating on directorApp_director.mid = ratingApp_rating.mid) on movieApp_movie.mid = directorApp_director.mid)
 join countryApp_country on movieApp_movie.mid = countryApp_country.mid
 where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like  '%{search}%' or actorApp_actor.a_name like '%{search}%' 
-
-
 '''
 
         cursor.execute(a)
@@ -303,7 +301,6 @@ def getRandomMovie(request):
             from movieApp_movie 
             where movieApp_movie.mid in {randomList}
 '''
-
         cursor.execute(a)
         result = []
         columns = [column[0] for column in cursor.description]
