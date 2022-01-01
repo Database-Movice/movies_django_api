@@ -289,3 +289,4 @@ where movieApp_movie.title like '%{search}%' or directorApp_director.d_name like
         return response
     except Exception as e:
         print(e)
+
