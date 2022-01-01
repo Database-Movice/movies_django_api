@@ -260,8 +260,6 @@ def getMovieByDirector(request):
 from movieApp_movie join directorApp_director on movieApp_movie.mid = directorApp_director.mid
 where directorApp_director.d_name like '%{directorname}%' 
 order by movieApp_movie.mid 
-
-
 '''
 
         cursor.execute(query)
